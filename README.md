@@ -1,6 +1,6 @@
 # envconfig
 
-[![Build Status](https://travis-ci.org/MrBoolean/envconfig.svg?branch=master)](https://travis-ci.org/MrBoolean/envconfig) [![Maintainability](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/maintainability)](https://codeclimate.com/github/MrBoolean/envconfig/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/test_coverage)](https://codeclimate.com/github/MrBoolean/envconfig/test_coverage)
+[![Build Status](https://travis-ci.org/MrBoolean/envconfig.svg?branch=master)](https://travis-ci.org/MrBoolean/envconfig) [![Maintainability](https://api.codeclimate.com/v1/badges/d78a9e4a4d079f980c01/maintainability)](https://codeclimate.com/github/MrBoolean/envconfig/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d78a9e4a4d079f980c01/test_coverage)](https://codeclimate.com/github/MrBoolean/envconfig/test_coverage)
 
 ## Install
 
