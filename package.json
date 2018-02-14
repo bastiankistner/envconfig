@@ -1,0 +1,53 @@
+{
+  "name": "env-cfg",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:MrBoolean/env-cfg.git",
+  "author": "MrBoolean <marcandrebinder@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "NODE_ENV=production npm-run-all build:clean build:flow:copy build:flow:clean",
+    "build:clean": "rm -f *.js *.js.flow",
+    "build:flow:copy": "flow-copy-source -i *.test.js src/ ./",
+    "build:flow:clean": "flow-remove-types -d ./ src/",
+    "test": "npm-run-all test:jest test:flow test:lint",
+    "test:jest": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --coverage",
+    "test:jest:watch": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --watch",
+    "test:flow": "flow lib/",
+    "test:lint": "eslint lib/",
+    "release": "npm-run-all test build"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.1",
+    "babel-jest": "^22.2.2",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "documentation": "^5.4.0",
+    "eslint": "^4.9.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-flowtype": "^2.44.0",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "flow-bin": "^0.64.0",
+    "flow-copy-source": "^1.3.0",
+    "flow-remove-types": "^1.2.3",
+    "jest": "^22.2.2",
+    "jest-junit": "^3.6.0",
+    "npm-run-all": "^4.1.2",
+    "rimraf": "^2.6.2"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": ["node_modules"],
+    "collectCoverageFrom": ["src/**/*.js"],
+    "testMatch": ["<rootDir>/src/**/?(*.)(spec|test).js?(x)"],
+    "testPathIgnorePatterns": ["<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]"],
+    "transform": {
+      "^.+\\.(js|jsx)$": "<rootDir>/node_modules/babel-jest"
+    },
+    "transformIgnorePatterns": ["[/\\\\]node_modules[/\\\\].+\\.(js|ts|jsx)$"],
+    "testResultsProcessor": "./node_modules/jest-junit",
+    "coverageDirectory": "<rootDir>/coverage"
+  }
+}
