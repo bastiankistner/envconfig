@@ -1,18 +1,18 @@
-# env-cfg
+# envconfig
 
-[![Build Status](https://travis-ci.org/MrBoolean/env-cfg.svg?branch=master)](https://travis-ci.org/MrBoolean/env-cfg) [![Maintainability](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/maintainability)](https://codeclimate.com/github/MrBoolean/env-cfg/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/test_coverage)](https://codeclimate.com/github/MrBoolean/env-cfg/test_coverage)
+[![Build Status](https://travis-ci.org/MrBoolean/envconfig.svg?branch=master)](https://travis-ci.org/MrBoolean/envconfig) [![Maintainability](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/maintainability)](https://codeclimate.com/github/MrBoolean/envconfig/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/test_coverage)](https://codeclimate.com/github/MrBoolean/envconfig/test_coverage)
 
 ## Install
 
 1. Fire up a Terminal.
-1. Run `npm i env-cfg` or `yarn add env-cfg`.
+1. Run `npm i @mrboolean/envconfig` or `yarn add @mrboolean/envconfig`.
 
 ## Usage
 
 ### Standard
 
 ```javascript
-const envCfg = require('env-cfg');
+const envCfg = require('@mrboolean/envconfig');
 
 const config = envCfg({
     isDebug: {
@@ -43,7 +43,7 @@ Results:
 ### Custom sanitizer
 
 ```javascript
-const envCfg = require('env-cfg');
+const envCfg = require('@mrboolean/envconfig');
 
 module.exports = envCfg({
     custom: {
@@ -55,7 +55,7 @@ module.exports = envCfg({
 
 ## Supported Types
 
-`env-cfg` supports these field types:
+`@mrboolean/envconfig` supports these field types:
 
 * number
 * string

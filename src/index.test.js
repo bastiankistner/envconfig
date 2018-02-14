@@ -1,6 +1,6 @@
 const envCfg = require('./');
 
-describe('env-cfg', () => {
+describe('@mrboolean/envconfig', () => {
   it('exports all known sanitizers', () => {
     expect(envCfg.TYPE_NUMBER).toBe('number');
     expect(envCfg.TYPE_STRING).toBe('string');

@@ -1,8 +1,8 @@
 {
-  "name": "env-cfg",
+  "name": "@mrboolean/envconfig",
   "version": "1.0.0-rc.1",
   "main": "index.js",
-  "repository": "git@github.com:MrBoolean/env-cfg.git",
+  "repository": "git@github.com:MrBoolean/envconfig.git",
   "author": "MrBoolean <marcandrebinder@gmail.com>",
   "license": "MIT",
   "scripts": {
