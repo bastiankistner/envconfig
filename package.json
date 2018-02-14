@@ -15,8 +15,8 @@
     "test": "npm-run-all test:jest test:flow test:lint",
     "test:jest": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --coverage",
     "test:jest:watch": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --watch",
-    "test:flow": "flow lib/",
-    "test:lint": "eslint lib/",
+    "test:flow": "flow src/",
+    "test:lint": "eslint src/",
     "release": "npm-run-all test build"
   },
   "devDependencies": {
