@@ -1,6 +1,6 @@
 # envconfig
 
-[![Build Status](https://travis-ci.org/MrBoolean/envconfig.svg?branch=master)](https://travis-ci.org/MrBoolean/envconfig) [![Maintainability](https://api.codeclimate.com/v1/badges/d78a9e4a4d079f980c01/maintainability)](https://codeclimate.com/github/MrBoolean/envconfig/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d78a9e4a4d079f980c01/test_coverage)](https://codeclimate.com/github/MrBoolean/envconfig/test_coverage) [![npm (scoped)](https://img.shields.io/npm/v/@mrboolean/envconfig.svg)]() [![npm](https://img.shields.io/npm/dm/@mrboolean/envconfig.svg)]()
+[![Build Status](https://travis-ci.org/MrBoolean/envconfig.svg?branch=master)](https://travis-ci.org/MrBoolean/envconfig) [![Maintainability](https://api.codeclimate.com/v1/badges/d78a9e4a4d079f980c01/maintainability)](https://codeclimate.com/github/MrBoolean/envconfig/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/d78a9e4a4d079f980c01/test_coverage)](https://codeclimate.com/github/MrBoolean/envconfig/test_coverage) [![npm (scoped)](https://img.shields.io/npm/v/@mrboolean/envconfig.svg)](https://www.npmjs.com/package/@mrboolean/envconfig) [![npm](https://img.shields.io/npm/dm/@mrboolean/envconfig.svg)](https://www.npmjs.com/package/@mrboolean/envconfig)
 
 ## Install
 
