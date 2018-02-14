@@ -1,6 +1,6 @@
 # env-cfg
 
-[![Build Status](https://travis-ci.org/MrBoolean/env-cfg.svg?branch=master)](https://travis-ci.org/MrBoolean/env-cfg)
+[![Build Status](https://travis-ci.org/MrBoolean/env-cfg.svg?branch=master)](https://travis-ci.org/MrBoolean/env-cfg) [![Maintainability](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/maintainability)](https://codeclimate.com/github/MrBoolean/env-cfg/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/966248ef41fa1241b57a/test_coverage)](https://codeclimate.com/github/MrBoolean/env-cfg/test_coverage)
 
 ## Install
 

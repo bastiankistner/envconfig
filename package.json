@@ -17,7 +17,8 @@
     "test:jest:watch": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --watch",
     "test:flow": "flow src/",
     "test:lint": "eslint src/",
-    "release": "npm-run-all test build"
+    "release": "npm-run-all test build",
+    "report": "codeclimate-test-reporter < coverage/lcov.info"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -25,6 +26,7 @@
     "babel-eslint": "^8.2.1",
     "babel-jest": "^22.2.2",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "codeclimate-test-reporter": "^0.5.0",
     "documentation": "^5.4.0",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
