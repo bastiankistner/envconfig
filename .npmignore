@@ -7,3 +7,5 @@ lib/
 .flowconfig
 .gitignore
 yarn.lock
+!/*.js
+!/*.flow
