@@ -1,11 +1,10 @@
 coverage/
 flow-typed/
-lib/
+src/
 .babelrc
 .editorconfig
 .eslintrc
 .flowconfig
 .gitignore
 yarn.lock
-!/*.js
-!/*.flow
+.travis.yml
