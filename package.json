@@ -1,6 +1,6 @@
 {
   "name": "@mrboolean/envconfig",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0-rc.3",
   "main": "index.js",
   "repository": "git@github.com:MrBoolean/envconfig.git",
   "author": "MrBoolean <marcandrebinder@gmail.com>",
