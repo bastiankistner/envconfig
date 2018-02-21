@@ -74,7 +74,7 @@ module.exports = (specification: Specification, input: Object = process.env): Co
       throw new Error(`Invalid specification: ${key}.sanitize must be a function`);
     }
 
-    let value = input[key];
+    let value = input[name];
     const isStandardDefined = typeof standard !== 'undefined';
     const wasInitiallyDefined = typeof value !== 'undefined';
 
