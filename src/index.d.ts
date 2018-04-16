@@ -25,5 +25,6 @@ declare module '@mrboolean/envconfig' {
       sanitize?: SpecificationSanitizer;
     };
   }
-  export default function<T>(specification: Specification, input?: Object): T;
+
+  export function describe<T>(specification: Specification, input?: Object): T;
 }

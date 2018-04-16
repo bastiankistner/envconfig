@@ -7,9 +7,10 @@
   "license": "MIT",
   "scripts": {
     "build":
-      "NODE_ENV=production npm-run-all build:clean:pre build:flow:copy build:flow:clean build:clean:post",
+      "NODE_ENV=production npm-run-all build:clean:pre build:flow:copy build:flow:clean build:ts:copy build:clean:post",
     "build:clean:pre": "rimraf *.js *.js.flow",
     "build:flow:copy": "flow-copy-source -i *.test.js src/ ./",
+    "build:ts:copy": "cp src/index.d.ts ./",
     "build:flow:clean": "flow-remove-types -d ./ src/",
     "build:clean:post": "rimraf *.test.js",
     "test": "npm-run-all test:jest test:flow test:lint",

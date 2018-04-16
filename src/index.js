@@ -44,7 +44,7 @@ export type Config = {
   [key: string]: any,
 };
 
-module.exports = (specification: Specification, input: Object = process.env): Config => {
+const describe = (specification: Specification, input: Object = process.env): Config => {
   if (typeof specification !== 'object') {
     throw new Error('The first argument must be an object');
   }
@@ -103,6 +103,7 @@ module.exports = (specification: Specification, input: Object = process.env): Co
   }, {});
 };
 
+module.exports.describe = describe;
 module.exports.TYPE_NUMBER = 'number';
 module.exports.TYPE_STRING = 'string';
 module.exports.TYPE_ARRAY = 'array';

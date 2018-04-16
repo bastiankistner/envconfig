@@ -1,6 +1,7 @@
 node_modules/
 /*.js
 /*.flow
+/*.d.ts
 .DS_Store
 junit.xml
 coverage/
