@@ -11,21 +11,26 @@
 
 ### Standard
 
-```javascript
-const envCfg = require('@mrboolean/envconfig');
+```typescript
+import { describe, Type } from '@mrboolean/envconfig';
 
-const config = envCfg({
-    isDebug: {
-        name: 'DEBUG',
-        type: envCfg.TYPE_BOOLEAN,
-        isRequired: true,
-        standard: false,
-    },
-    port: {
-        name: 'BIND_PORT',
-        type: envCfg.TYPE_NUMBER,
-        standard: 8080,
-    },
+interface Config {
+  isDebug: boolean;
+  port: number;
+}
+
+const config = <Config>describe({
+  isDebug: {
+    name: 'DEBUG',
+    type: Type.BOOLEAN,
+    isRequired: true,
+    standard: false,
+  },
+  port: {
+    name: 'BIND_PORT',
+    type: Type.NUMBER,
+    standard: 8080,
+  },
 });
 
 console.log(config);
@@ -35,21 +40,25 @@ Results:
 
 ```json
 {
-    "isDebug": false,
-    "port": 8080
+  "isDebug": false,
+  "port": 8080
 }
 ```
 
 ### Custom sanitizer
 
-```javascript
-const envCfg = require('@mrboolean/envconfig');
+```typescript
+import { describe } from '@mrboolean/envconfig';
 
-module.exports = envCfg({
-    custom: {
-        name: 'CUSTOM',
-        sanitize: value => (value === 1 ? false : true),
-    },
+interface Config {
+  custom: boolean;
+}
+
+const config = <Config>describe({
+  custom: {
+    name: 'CUSTOM',
+    sanitize: (value: any): boolean => (value === 1 ? false : true),
+  },
 });
 ```
 
@@ -57,11 +66,11 @@ module.exports = envCfg({
 
 `@mrboolean/envconfig` supports these field types:
 
-* number
-* string
-* array
-* boolean
-* json
+- number
+- string
+- array
+- boolean
+- json
 
 ## License
 
