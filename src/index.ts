@@ -12,7 +12,7 @@ export type Sanitizer = (value: any) => any;
 
 export interface Specification {
   [key: string]: {
-    type?: sanitizers.Type;
+    type?: Type;
     name: string;
     isRequired?: boolean;
     standard?: any;
