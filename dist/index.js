@@ -35,6 +35,9 @@ exports.describe = function (specification, input) {
     }
     return Object.keys(specification).reduce(function (acc, key) {
         var itemSpecification = specification[key];
+        if (itemSpecification === null) {
+            itemSpecification = {};
+        }
         if (typeof itemSpecification === "string") {
             itemSpecification = {
                 default: specification[key]

@@ -18,7 +18,8 @@ export interface Specification {
         default?: any;
         sanitize?: Sanitizer;
       }
-    | string;
+    | Type
+    | null;
 }
 
 export type Config = {
@@ -40,6 +41,10 @@ export const describe = <T extends { [key: string]: any }>(
   return Object.keys(specification).reduce<T>(
     (acc, key) => {
       let itemSpecification = specification[key];
+
+      if (itemSpecification === null) {
+        itemSpecification = {};
+      }
 
       if (typeof itemSpecification === "string") {
         itemSpecification = {
