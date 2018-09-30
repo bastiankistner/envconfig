@@ -12,7 +12,7 @@ export interface Specification {
         isOptional?: boolean;
         default?: any;
         sanitize?: Sanitizer;
-    };
+    } | string;
 }
 export declare type Config = {
     [key: string]: any;
