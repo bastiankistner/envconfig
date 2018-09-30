@@ -1,146 +1,139 @@
-import { describe as envConfig, Type } from './';
+import { describe as envConfig, Type } from "./";
 
-describe('@mrboolean/envconfig', () => {
-  it('exports all known sanitizers', () => {
-    expect(Type.NUMBER).toBe('number');
-    expect(Type.STRING).toBe('string');
-    expect(Type.ARRAY).toBe('array');
-    expect(Type.BOOLEAN).toBe('boolean');
-    expect(Type.JSON).toBe('json');
+describe("@mrboolean/envconfig", () => {
+  it("exports all known sanitizers", () => {
+    expect(Type.NUMBER).toBe("number");
+    expect(Type.STRING).toBe("string");
+    expect(Type.ARRAY).toBe("array");
+    expect(Type.BOOLEAN).toBe("boolean");
+    expect(Type.JSON).toBe("json");
   });
 
-  it('fails without a specification', () => {
-    expect(() => envConfig(undefined as any)).toThrow('The first argument must be an object');
+  it("fails without a specification", () => {
+    expect(() => envConfig(undefined as any)).toThrow("The first argument must be an object");
   });
 
-  it('fails without an input', () => {
-    expect(() => envConfig({}, 1 as any)).toThrow('The second argument must be an object');
+  it("fails without an input", () => {
+    expect(() => envConfig({}, 1 as any)).toThrow("The second argument must be an object");
   });
 
-  it('fails without name', () => {
+  it("fails without name", () => {
     expect(() =>
       envConfig({
-        test: {} as any,
+        test: {} as any
       })
-    ).toThrow('Invalid specification: test.name is required');
+    ).toThrow("Invalid specification: test.name is required");
   });
 
-  it('fails if the type is unknown', () => {
-    expect(() =>
-      envConfig({
-        test: {
-          name: 'test',
-          type: 'unknown',
-        } as any,
-      })
-    ).toThrow('Invalid specification: test.type is invalid');
-  });
-
-  it('fails if the sanitize property does not contain a function', () => {
+  it("fails if the type is unknown", () => {
     expect(() =>
       envConfig({
         test: {
-          name: 'test',
-          sanitize: 1,
-        } as any,
+          type: "unknown"
+        } as any
       })
-    ).toThrow('Invalid specification: test.sanitize must be a function');
+    ).toThrow("Invalid specification: test.type is invalid");
   });
 
-  it('uses the standard value', () => {
+  it("fails if the sanitize property does not contain a function", () => {
+    expect(() =>
+      envConfig({
+        test: {
+          name: "test",
+          sanitize: 1
+        } as any
+      })
+    ).toThrow("Invalid specification: test.sanitize must be a function");
+  });
+
+  it("uses the default value", () => {
     expect(
       envConfig(
         {
           test: {
             type: Type.STRING,
-            name: 'test',
-            standard: 'some',
-          },
+            default: "some"
+          }
         },
         {}
       )
     ).toMatchObject({
-      test: 'some',
+      test: "some"
     });
   });
 
-  it('uses the default sanitizer for standard values', () => {
+  it("uses the default sanitizer for default values", () => {
     expect(
       envConfig(
         {
           test: {
-            name: 'test',
             type: Type.BOOLEAN,
-            standard: 'true',
-          },
+            default: "true"
+          }
         },
-        { test: 'true' }
+        { test: "true" }
       )
     ).toMatchObject({
-      test: true,
+      test: true
     });
   });
 
-  it('throws an error if a property is required and not provided', () => {
+  it("throws an error if a property is required and not provided", () => {
     expect(() =>
       envConfig({
         test: {
-          name: 'test',
           type: Type.STRING,
-          isRequired: true,
-        },
+          isOptional: false
+        }
       })
-    ).toThrow('Required: test');
+    ).toThrow("Required: test");
   });
 
-  it('uses the custom sanitizer', () => {
+  it("uses the custom sanitizer", () => {
     expect(
       envConfig<Object>(
         {
           test: {
-            name: 'test',
-            sanitize: () => 1337,
-          },
+            sanitize: () => 1337
+          }
         },
-        { test: 'true' }
+        { test: "true" }
       )
     ).toMatchObject({
-      test: 1337,
+      test: 1337
     });
   });
 
-  it('throws an error without type and sanitizer function', () => {
+  it("throws an error without type and sanitizer function", () => {
     expect(() =>
       envConfig({
-        test: { name: 'test' } as any,
+        test: { name: "test" } as any
       })
-    ).toThrow('Invalid specification: either test.type or test.sanitize is required');
+    ).toThrow("Invalid specification: either test.type or test.sanitize is required");
   });
 
-  it('throws an error if without a value', () => {
+  it("throws an error if without a value", () => {
     expect(() =>
       envConfig(
         {
           test: {
-            name: 'test',
             sanitize: () => undefined,
-            isRequired: true,
-          },
+            isOptional: false
+          }
         },
         { test: 1 }
       )
-    ).toThrow('Required: test');
+    ).toThrow("Required: test");
   });
 
-  it('works without required fields', () => {
+  it("works without required fields", () => {
     expect(
       Object.keys(
         envConfig(
           {
             test: {
-              name: 'test',
-              type: Type.BOOLEAN,
-            },
+              type: Type.BOOLEAN
+            }
           },
           {}
         )
@@ -148,38 +141,37 @@ describe('@mrboolean/envconfig', () => {
     ).toHaveLength(0);
   });
 
-  it('works without unrequired fields and a standard value', () => {
+  it("works without unrequired fields and a default value", () => {
     expect(
       envConfig(
         {
           test: {
-            name: 'test',
             type: Type.BOOLEAN,
-            standard: false,
-          },
+            default: false
+          }
         },
         {}
       )
     ).toMatchObject({
-      test: false,
+      test: false
     });
   });
 
-  describe('sanitizers', () => {
+  describe("sanitizers", () => {
     const sanitizerTests = [
       { type: Type.NUMBER, inputValue: 1, expectedValue: 1 },
-      { type: Type.NUMBER, inputValue: '1', expectedValue: 1 },
-      { type: Type.NUMBER, inputValue: '1.2', expectedValue: 1.2 },
-      { type: Type.STRING, inputValue: '1', expectedValue: '1' },
-      { type: Type.STRING, inputValue: true, expectedValue: 'true' },
-      { type: Type.ARRAY, inputValue: '1,2,3', expectedValue: ['1', '2', '3'] },
-      { type: Type.BOOLEAN, inputValue: 'true', expectedValue: true },
-      { type: Type.BOOLEAN, inputValue: 'TRUE', expectedValue: true },
+      { type: Type.NUMBER, inputValue: "1", expectedValue: 1 },
+      { type: Type.NUMBER, inputValue: "1.2", expectedValue: 1.2 },
+      { type: Type.STRING, inputValue: "1", expectedValue: "1" },
+      { type: Type.STRING, inputValue: true, expectedValue: "true" },
+      { type: Type.ARRAY, inputValue: "1,2,3", expectedValue: ["1", "2", "3"] },
+      { type: Type.BOOLEAN, inputValue: "true", expectedValue: true },
+      { type: Type.BOOLEAN, inputValue: "TRUE", expectedValue: true },
       { type: Type.BOOLEAN, inputValue: 1, expectedValue: true },
-      { type: Type.BOOLEAN, inputValue: 'false', expectedValue: false },
-      { type: Type.BOOLEAN, inputValue: 'FALSE', expectedValue: false },
+      { type: Type.BOOLEAN, inputValue: "false", expectedValue: false },
+      { type: Type.BOOLEAN, inputValue: "FALSE", expectedValue: false },
       { type: Type.BOOLEAN, inputValue: 0, expectedValue: false },
-      { type: Type.JSON, inputValue: '{"a":1}', expectedValue: { a: 1 } },
+      { type: Type.JSON, inputValue: '{"a":1}', expectedValue: { a: 1 } }
     ];
 
     sanitizerTests.forEach(({ type, inputValue, expectedValue }) => {
@@ -188,15 +180,14 @@ describe('@mrboolean/envconfig', () => {
           envConfig(
             {
               test: {
-                name: 'test',
                 type,
-                isRequired: true,
-              },
+                isOptional: false
+              }
             },
             { test: inputValue }
           )
         ).toMatchObject({
-          test: expectedValue,
+          test: expectedValue
         });
       });
     });

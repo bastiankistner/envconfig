@@ -15,5 +15,6 @@
     "lib": ["es6"],
     "declaration": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.js"]
 }

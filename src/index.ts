@@ -13,9 +13,8 @@ export type Sanitizer = (value: any) => any;
 export interface Specification {
   [key: string]: {
     type?: Type;
-    name: string;
-    isRequired?: boolean;
-    standard?: any;
+    isOptional?: boolean;
+    default?: any;
     sanitize?: Sanitizer;
   };
 }
@@ -26,7 +25,7 @@ export type Config = {
 
 export const describe = <T extends { [key: string]: any }>(
   specification: Specification,
-  input: { [key: string]: any } = process.env
+  input: { [key: string]: any } = process.env 
 ): T => {
   if (typeof specification !== 'object') {
     throw new Error('The first argument must be an object');
@@ -38,26 +37,23 @@ export const describe = <T extends { [key: string]: any }>(
 
   return Object.keys(specification).reduce<T>(
     (acc, key) => {
-      const { name, type, ...rest } = specification[key];
-      let value = input[name];
-
-      if (!name) {
-        throw new Error(`Invalid specification: ${key}.name is required`);
-      }
+      const { type = Type.STRING, ...rest } = specification[key];
+      let value = input[key];
 
       if (!type && !rest.sanitize) {
         throw new Error(`Invalid specification: either ${key}.type or ${key}.sanitize is required`);
       }
+
 
       if (type) {
         if (!sanitizers[type as Type]) {
           throw new Error(`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(sanitizers).join(', ')}`);
         }
 
-        const isStandardDefined = typeof rest.standard !== 'undefined';
+        const isStandardDefined = typeof rest.default !== 'undefined';
         const wasInitiallyDefined = typeof value !== 'undefined';
 
-        if (rest.isRequired && !wasInitiallyDefined && !isStandardDefined) {
+        if (!rest.isOptional && !wasInitiallyDefined && !isStandardDefined) {
           throw new Error(`Required: ${key}`);
         }
 
@@ -66,7 +62,7 @@ export const describe = <T extends { [key: string]: any }>(
         }
 
         if (typeof value === 'undefined' && isStandardDefined) {
-          value = value || rest.standard;
+          value = value || rest.default;
         }
       } else {
         const item = specification[key];
@@ -78,7 +74,7 @@ export const describe = <T extends { [key: string]: any }>(
         value = item.sanitize(value);
       }
 
-      if (typeof value === 'undefined' && rest.isRequired) {
+      if (typeof value === 'undefined' && !rest.isOptional) {
         throw new Error(`Required: ${key}`);
       }
 
