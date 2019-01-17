@@ -44,7 +44,7 @@ exports.describe = function (specification, input) {
             };
         }
         var _a = itemSpecification.type, type = _a === void 0 ? Type.STRING : _a, rest = __rest(itemSpecification, ["type"]);
-        var value = input[key];
+        var value = input[itemSpecification.name || key];
         if (!type && !rest.sanitize) {
             throw new Error("Invalid specification: either " + key + ".type or " + key + ".sanitize is required");
         }

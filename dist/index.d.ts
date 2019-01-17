@@ -9,6 +9,7 @@ export declare type Sanitizer = (value: any) => any;
 export interface Specification {
     [key: string]: {
         type?: Type;
+        name?: string;
         isOptional?: boolean;
         default?: any;
         sanitize?: Sanitizer;

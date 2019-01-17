@@ -14,6 +14,7 @@ export interface Specification {
   [key: string]:
     | {
         type?: Type;
+        name?: string,
         isOptional?: boolean;
         default?: any;
         sanitize?: Sanitizer;
@@ -53,7 +54,7 @@ export const describe = <T extends { [key: string]: any }>(
       }
 
       const { type = Type.STRING, ...rest } = itemSpecification;
-      let value = input[key];
+      let value = input[itemSpecification.name || key];
 
       if (!type && !rest.sanitize) {
         throw new Error(`Invalid specification: either ${key}.type or ${key}.sanitize is required`);
