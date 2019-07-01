@@ -1,106 +1,110 @@
-import * as sanitizers from "./sanitizers";
+import * as sanitizers from './sanitizers';
 
 export enum Type {
-  NUMBER = "number",
-  STRING = "string",
-  ARRAY = "array",
-  BOOLEAN = "boolean",
-  JSON = "json"
+	NUMBER = 'number',
+	STRING = 'string',
+	ARRAY = 'array',
+	BOOLEAN = 'boolean',
+	JSON = 'json',
 }
 
 export type Sanitizer = (value: any) => any;
 
+function handleError(message: string) {
+	console.error(message);
+	throw new Error(message);
+}
+
 export interface Specification {
-  [key: string]:
-    | {
-        type?: Type;
-        name?: string,
-        isOptional?: boolean;
-        default?: any;
-        sanitize?: Sanitizer;
-      }
-    | Type
-    | null;
+	[key: string]:
+		| {
+				type?: Type;
+				name?: string;
+				isOptional?: boolean;
+				default?: any;
+				sanitize?: Sanitizer;
+		  }
+		| Type
+		| null;
 }
 
 export type Config = {
-  [key: string]: any;
+	[key: string]: any;
 };
 
 export const describe = <T extends { [key: string]: any }>(
-  specification: Specification,
-  input: { [key: string]: any } = process.env
+	specification: Specification,
+	input: { [key: string]: any } = process.env
 ): T => {
-  if (typeof specification !== "object") {
-    throw new Error("The first argument must be an object");
-  }
+	if (typeof specification !== 'object') {
+		handleError('The first argument must be an object');
+	}
 
-  if (typeof input !== "object") {
-    throw new Error("The second argument must be an object");
-  }
+	if (typeof input !== 'object') {
+		handleError('The second argument must be an object');
+	}
 
-  return Object.keys(specification).reduce<T>(
-    (acc, key) => {
-      let itemSpecification = specification[key];
+	return Object.keys(specification).reduce<T>(
+		(acc, key) => {
+			let itemSpecification = specification[key];
 
-      if (itemSpecification === null) {
-        itemSpecification = {};
-      }
+			if (itemSpecification === null) {
+				itemSpecification = {};
+			}
 
-      if (typeof itemSpecification === "string") {
-        itemSpecification = {
-          default: specification[key]
-        };
-      }
+			if (typeof itemSpecification === 'string') {
+				itemSpecification = {
+					default: specification[key],
+				};
+			}
 
-      const { type = Type.STRING, ...rest } = itemSpecification;
-      let value = input[itemSpecification.name || key];
+			const { type = Type.STRING, ...rest } = itemSpecification;
+			let value = input[itemSpecification.name || key];
 
-      if (!type && !rest.sanitize) {
-        throw new Error(`Invalid specification: either ${key}.type or ${key}.sanitize is required`);
-      }
+			if (!type && !rest.sanitize) {
+				handleError(`Invalid specification: either ${key}.type or ${key}.sanitize is required`);
+			}
 
-      if (type) {
-        if (!sanitizers[type as Type]) {
-          throw new Error(
-            `Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(sanitizers).join(", ")}`
-          );
-        }
+			if (type) {
+				if (!sanitizers[type as Type]) {
+					handleError(`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(sanitizers).join(', ')}`);
+				}
 
-        const isStandardDefined = typeof rest.default !== "undefined";
-        const wasInitiallyDefined = typeof value !== "undefined";
+				const isStandardDefined = typeof rest.default !== 'undefined';
+				const wasInitiallyDefined = typeof value !== 'undefined';
 
-        if (!rest.isOptional && !wasInitiallyDefined && !isStandardDefined) {
-          throw new Error(`Required: ${key}`);
-        }
+				if (!rest.isOptional && !wasInitiallyDefined && !isStandardDefined) {
+					handleError(`Required: ${key}`);
+				}
 
-        if (wasInitiallyDefined) {
-          value = sanitizers[type as Type](value);
-        }
+				if (wasInitiallyDefined) {
+					value = sanitizers[type as Type](value);
+				}
 
-        if (typeof value === "undefined" && isStandardDefined) {
-          value = value || rest.default;
-        }
-      } else {
-        const item = itemSpecification;
+				if (typeof value === 'undefined' && isStandardDefined) {
+					value = value || rest.default;
+				}
+			} else {
+				const item = itemSpecification;
 
-        if (typeof item.sanitize !== "function") {
-          throw new Error(`Invalid specification: ${key}.sanitize must be a function`);
-        }
+				if (typeof item.sanitize !== 'function') {
+					handleError(`Invalid specification: ${key}.sanitize must be a function`);
+				} else {
+					value = item.sanitize(value);
+				}
+			}
 
-        value = item.sanitize(value);
-      }
+			if (typeof value === 'undefined' && !rest.isOptional) {
+				handleError(`Required: ${key}`);
+			}
 
-      if (typeof value === "undefined" && !rest.isOptional) {
-        throw new Error(`Required: ${key}`);
-      }
+			if (typeof value !== 'undefined') {
+        // @ts-ignore
+				acc[key] = value;
+			}
 
-      if (typeof value !== "undefined") {
-        acc[key] = value;
-      }
-
-      return acc;
-    },
-    {} as T
-  );
+			return acc;
+		},
+		{} as T
+	);
 };
