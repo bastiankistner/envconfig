@@ -1,48 +1,63 @@
 {
-	"name": "@mrboolean/envconfig",
-	"version": "3.1.0",
-	"main": "dist/index.js",
-	"types": "./dist/index.d.ts",
-	"repository": "git@github.com:MrBoolean/envconfig.git",
-	"author": "MrBoolean <marcandrebinder@gmail.com>",
-	"license": "MIT",
-	"scripts": {
-		"build:clean": "rimraf dist/**",
-		"build:transpile": "NODE_ENV=production tsc",
-		"build": "npm-run-all build:clean build:transpile",
-		"test": "npm-run-all test:jest test:lint",
-		"test:jest": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --coverage",
-		"test:jest:watch": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --watch",
-		"test:lint": "tslint -c tslint.json 'src/**/*.ts'",
-		"release": "npm-run-all test build",
-		"report": "codeclimate-test-reporter < coverage/lcov.info"
-	},
-	"devDependencies": {
-		"@types/jest": "^24.0.15",
-		"@types/node": "^12.0.10",
-		"codeclimate-test-reporter": "^0.5.1",
-		"documentation": "^5.4.0",
-		"jest": "^24.8.0",
-		"jest-junit": "^6.4.0",
-		"npm-run-all": "^4.1.5",
-		"prettier": "^1.18.2",
-		"rimraf": "^2.6.3",
-		"ts-jest": "^24.0.2",
-		"tslint": "^5.18.0",
-		"tslint-config-airbnb": "^5.11.1",
-		"tslint-config-prettier": "^1.18.0",
-		"typescript": "^3.5.2"
-	},
-	"jest": {
-		"coveragePathIgnorePatterns": ["node_modules"],
-		"collectCoverageFrom": ["src/**/*.ts"],
-		"testMatch": ["<rootDir>/src/**/?(*.)(spec|test).ts?(x)"],
-		"testPathIgnorePatterns": ["<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]"],
-		"transform": {
-			"^.+\\.tsx?$": "ts-jest"
-		},
-		"moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
-		"reporters": ["./node_modules/jest-junit"],
-		"coverageDirectory": "<rootDir>/coverage"
-	}
+  "name": "@mrboolean/envconfig",
+  "version": "3.0.0",
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": "git@github.com:MrBoolean/envconfig.git",
+  "author": "MrBoolean <marcandrebinder@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build:clean": "rimraf dist/**",
+    "build:transpile": "NODE_ENV=production tsc",
+    "build": "npm-run-all build:clean build:transpile",
+    "test": "npm-run-all test:jest test:lint",
+    "test:jest": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --coverage",
+    "test:jest:watch": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --watch",
+    "test:lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "release": "npm-run-all test build",
+    "report": "codeclimate-test-reporter < coverage/lcov.info"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.3.1",
+    "@types/node": "^10.5.6",
+    "codeclimate-test-reporter": "^0.5.0",
+    "documentation": "^5.4.0",
+    "jest": "^23.4.2",
+    "jest-junit": "^3.6.0",
+    "npm-run-all": "^4.1.2",
+    "prettier": "^1.14.0",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^23.1.2",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.9.2",
+    "tslint-config-prettier": "^1.14.0",
+    "typescript": "^3.0.1"
+  },
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "node_modules"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.ts"
+    ],
+    "testMatch": [
+      "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>[/\\\\](build|docs|node_modules|scripts)[/\\\\]"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "testResultsProcessor": "./node_modules/jest-junit",
+    "coverageDirectory": "<rootDir>/coverage"
+  }
 }
