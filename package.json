@@ -1,10 +1,9 @@
 {
-	"name": "@mrboolean/envconfig",
+	"name": "envconfig",
 	"version": "3.1.0",
 	"main": "dist/index.js",
 	"types": "./dist/index.d.ts",
-	"repository": "git@github.com:MrBoolean/envconfig.git",
-	"author": "MrBoolean <marcandrebinder@gmail.com>",
+	"repository": "git@github.com:passionkind/envconfig.git",
 	"license": "MIT",
 	"scripts": {
 		"build:clean": "rimraf dist/**",
