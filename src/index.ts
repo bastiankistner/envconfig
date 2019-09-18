@@ -37,10 +37,6 @@ export const describe = <T extends { [key: string]: any }>(
 	input: { [key: string]: any } | null = process.env,
 	defaults?: { [key: string]: any }
 ): T => {
-	console.log({
-		name: specification.name,
-	});
-
 	if (typeof specification !== 'object') {
 		handleError('The first argument must be an object');
 	}
@@ -101,7 +97,6 @@ export const describe = <T extends { [key: string]: any }>(
 				}
 
 				if (wasInitiallyDefined) {
-					console.log('sanitizing ... 🚨');
 					value = sanitizers[type as Type](value);
 				}
 
