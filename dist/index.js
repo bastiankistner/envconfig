@@ -17,7 +17,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var sanitizers = __importStar(require("./sanitizers"));
-console.log("😇");
 var Type;
 (function (Type) {
     Type["NUMBER"] = "number";
@@ -32,12 +31,14 @@ function handleError(message) {
 }
 exports.describe = function (specification, input, defaults) {
     if (input === void 0) { input = process.env; }
-    console.log({ input: input });
-    if (typeof specification !== "object") {
-        handleError("The first argument must be an object");
+    console.log({
+        name: specification.name,
+    });
+    if (typeof specification !== 'object') {
+        handleError('The first argument must be an object');
     }
-    if (typeof input !== "object") {
-        handleError("The second argument must be an object");
+    if (typeof input !== 'object') {
+        handleError('The second argument must be an object');
     }
     if (input === null) {
         return {};
@@ -47,9 +48,9 @@ exports.describe = function (specification, input, defaults) {
         if (itemSpecification === null) {
             itemSpecification = {};
         }
-        if (typeof itemSpecification === "string") {
+        if (typeof itemSpecification === 'string') {
             itemSpecification = {
-                default: specification[key]
+                default: specification[key],
             };
         }
         var _a = itemSpecification.type, type = _a === void 0 ? Type.STRING : _a, rest = __rest(itemSpecification, ["type"]);
@@ -60,35 +61,33 @@ exports.describe = function (specification, input, defaults) {
         if (!type && !rest.sanitize) {
             handleError("Invalid specification: either " + key + ".type or " + key + ".sanitize is required");
         }
-        if (type) {
+        if (itemSpecification.sanitize && typeof itemSpecification.sanitize !== 'function') {
+            handleError("Invalid specification: test.sanitize must be a function");
+        }
+        if (typeof itemSpecification.sanitize === 'function') {
+            value = itemSpecification.sanitize(value);
+        }
+        else {
             if (!sanitizers[type]) {
-                handleError("Invalid specification: " + key + ".type is invalid (valid types are: " + Object.keys(sanitizers).join(", "));
+                handleError("Invalid specification: " + key + ".type is invalid (valid types are: " + Object.keys(sanitizers).join(', '));
             }
-            var isStandardDefined = typeof rest.default !== "undefined";
-            var wasInitiallyDefined = typeof value !== "undefined";
+            var isStandardDefined = typeof rest.default !== 'undefined';
+            var wasInitiallyDefined = typeof value !== 'undefined';
             if (!rest.isOptional && !wasInitiallyDefined && !isStandardDefined) {
                 handleError("Required: " + key);
             }
             if (wasInitiallyDefined) {
+                console.log('sanitizing ... 🚨');
                 value = sanitizers[type](value);
             }
-            if (typeof value === "undefined" && isStandardDefined) {
+            if (typeof value === 'undefined' && isStandardDefined) {
                 value = value || rest.default;
             }
         }
-        else {
-            var item = itemSpecification;
-            if (typeof item.sanitize !== "function") {
-                handleError("Invalid specification: " + key + ".sanitize must be a function");
-            }
-            else {
-                value = item.sanitize(value);
-            }
-        }
-        if (typeof value === "undefined" && !rest.isOptional) {
+        if (typeof value === 'undefined' && !rest.isOptional) {
             handleError("Required: " + key + " as " + (itemSpecification.name || key));
         }
-        if (typeof value !== "undefined") {
+        if (typeof value !== 'undefined') {
             // @ts-ignore
             acc[key] = value;
         }
