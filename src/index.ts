@@ -1,5 +1,5 @@
 import * as sanitizers from "./sanitizers";
-
+console.log("😇");
 export enum Type {
   NUMBER = "number",
   STRING = "string",
@@ -14,7 +14,7 @@ export interface Specification {
   [key: string]:
     | {
         type?: Type;
-        name?: string,
+        name?: string;
         isOptional?: boolean;
         default?: any;
         sanitize?: Sanitizer;
@@ -34,14 +34,21 @@ export type Config = {
 
 export const describe = <T extends { [key: string]: any }>(
   specification: Specification,
-  input: { [key: string]: any } = process.env
+  input: { [key: string]: any } | null = process.env,
+  defaults?: { [key: string]: any }
 ): T => {
+  console.log({ input });
+
   if (typeof specification !== "object") {
-    handleError('The first argument must be an object');
+    handleError("The first argument must be an object");
   }
 
   if (typeof input !== "object") {
-    handleError('The second argument must be an object');
+    handleError("The second argument must be an object");
+  }
+
+  if (input === null) {
+    return {} as T;
   }
 
   return Object.keys(specification).reduce<T>(
@@ -61,13 +68,19 @@ export const describe = <T extends { [key: string]: any }>(
       const { type = Type.STRING, ...rest } = itemSpecification;
       let value = input[itemSpecification.name || key];
 
+      if (defaults && defaults[key]) {
+        value = defaults[key];
+      }
+
       if (!type && !rest.sanitize) {
         handleError(`Invalid specification: either ${key}.type or ${key}.sanitize is required`);
       }
 
       if (type) {
         if (!sanitizers[type as Type]) {
-          handleError(`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(sanitizers).join(', ')}`);
+          handleError(
+            `Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(sanitizers).join(", ")}`
+          );
         }
 
         const isStandardDefined = typeof rest.default !== "undefined";
@@ -92,11 +105,10 @@ export const describe = <T extends { [key: string]: any }>(
         } else {
           value = item.sanitize(value);
         }
-
       }
 
       if (typeof value === "undefined" && !rest.isOptional) {
-        handleError(`Required: ${key}`);
+        handleError(`Required: ${key} as ${itemSpecification.name || key}`);
       }
 
       if (typeof value !== "undefined") {

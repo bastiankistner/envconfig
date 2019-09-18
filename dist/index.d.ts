@@ -22,4 +22,6 @@ export declare const describe: <T extends {
     [key: string]: any;
 }>(specification: Specification, input?: {
     [key: string]: any;
-}) => T;
+} | null, defaults?: {
+    [key: string]: any;
+} | undefined) => T;
