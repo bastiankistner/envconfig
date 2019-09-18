@@ -31,9 +31,6 @@ function handleError(message) {
 }
 exports.describe = function (specification, input, defaults) {
     if (input === void 0) { input = process.env; }
-    console.log({
-        name: specification.name,
-    });
     if (typeof specification !== 'object') {
         handleError('The first argument must be an object');
     }
@@ -77,7 +74,6 @@ exports.describe = function (specification, input, defaults) {
                 handleError("Required: " + key);
             }
             if (wasInitiallyDefined) {
-                console.log('sanitizing ... 🚨');
                 value = sanitizers[type](value);
             }
             if (typeof value === 'undefined' && isStandardDefined) {
