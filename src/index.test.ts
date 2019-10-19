@@ -79,7 +79,7 @@ describe('envconfig', () => {
 
 	it('uses the custom sanitizer', () => {
 		expect(
-			envConfig<Object>(
+			envConfig(
 				{
 					test: {
 						sanitize: () => 1337,

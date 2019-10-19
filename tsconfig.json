@@ -1,20 +1,21 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es5",
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": "./src",
-    "paths": {
-      "*": ["node_modules/*", "src/types/*"]
-    },
-    "strictNullChecks": true,
-    "lib": ["es6"],
-    "declaration": true
-  },
-  "include": ["src/**/*"],
-  "exclude": ["**/*.test.js"]
+	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "es5",
+		"noImplicitAny": true,
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"outDir": "dist",
+		"baseUrl": "./src",
+		"paths": {
+			"*": ["node_modules/*", "src/types/*"]
+		},
+		"strictNullChecks": true,
+		"lib": ["es6"],
+		"declaration": true,
+		"skipLibCheck": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["**/*.test.js"]
 }
