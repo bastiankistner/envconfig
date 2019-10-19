@@ -41,14 +41,15 @@ export type Config = {
 	[key: string]: any;
 };
 
-type ExtractConfigType<T> = T extends { sanitize: (...args: any[]) => infer U }
+type ExtractConfigType<T> = T extends { isOptional: true; sanitize: (...args: any[]) => infer U }
+	? U | undefined
+	: T extends { isOptional: false | undefined; sanitize: (...args: any[]) => infer U }
 	? U
+	: T extends { isOptional: true }
+	? string | undefined
 	: T extends string
 	? FromType[T]
 	: string;
-// : T extends null
-// ? string
-// : string;
 
 export const describe = <T extends Specification, K extends keyof T>(
 	specification: T,
