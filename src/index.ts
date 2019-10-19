@@ -45,9 +45,10 @@ type ExtractConfigType<T> = T extends { sanitize: (...args: any[]) => infer U }
 	? U
 	: T extends string
 	? FromType[T]
-	: T extends null
-	? string
 	: string;
+// : T extends null
+// ? string
+// : string;
 
 export const describe = <T extends Specification, K extends keyof T>(
 	specification: T,
