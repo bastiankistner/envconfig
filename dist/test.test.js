@@ -8,7 +8,6 @@ describe('testing', function () {
             SHOPIFY_API_LIMIT_MAX_POINTS: { default: 1000, isOptional: true },
             SHOPIFY_DEFAULT_API_VERSION: { default: '2019-07', isOptional: true },
             BOOL: { default: '2019-07', isOptional: true, sanitize: function () { return 4; } },
-            WHATEVER: null,
             ANY_OTHER: index_1.Type.BOOLEAN,
         });
         config.SHOPIFY_API_LIMIT_RESTORE_POINTS_PER_SECOND;

@@ -28,8 +28,14 @@ export declare type Config = {
     [key: string]: any;
 };
 declare type ExtractConfigType<T> = T extends {
+    isOptional: true;
     sanitize: (...args: any[]) => infer U;
-} ? U : T extends string ? FromType[T] : T extends null ? string : string;
+} ? U | undefined : T extends {
+    isOptional: false | undefined;
+    sanitize: (...args: any[]) => infer U;
+} ? U : T extends {
+    isOptional: true;
+} ? string | undefined : T extends string ? FromType[T] : string;
 export declare const describe: <T extends Specification, K extends keyof T>(specification: T, input?: {
     [key: string]: any;
 } | null, defaults?: {
