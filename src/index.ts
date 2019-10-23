@@ -20,13 +20,13 @@ type FromType = {
 
 export type Sanitizer = (value: any) => any;
 
-interface IDetailedSpecification {
+type IDetailedSpecification = {
 	type?: Type;
 	name?: string;
 	isOptional?: boolean;
 	default?: any;
 	sanitize?: Sanitizer;
-}
+};
 
 export interface Specification {
 	[key: string]: IDetailedSpecification | Type | null;
@@ -41,15 +41,23 @@ export type Config = {
 	[key: string]: any;
 };
 
-type ExtractConfigType<T> = T extends { isOptional: true; sanitize: (...args: any[]) => infer U }
+type ExtractConfigType<T> = T extends {
+	isOptional: true;
+	sanitize: (...args: any[]) => infer U;
+	[key: string]: any;
+}
 	? U | undefined
-	: T extends { isOptional: false | undefined; sanitize: (...args: any[]) => infer U }
+	: T extends {
+			isOptional?: false | undefined;
+			sanitize: (...args: any[]) => infer U;
+			[key: string]: any;
+	  }
 	? U
-	: T extends { isOptional: true | undefined; type: Type }
+	: T extends { isOptional: true | undefined; type: Type; [key: string]: any }
 	? FromType[T['type']] | undefined
-	: T extends { isOptional: false | undefined; type: Type }
+	: T extends { isOptional?: false | undefined; type: Type; [key: string]: any }
 	? FromType[T['type']]
-	: T extends { isOptional: true }
+	: T extends { isOptional: true; [key: string]: any }
 	? string | undefined
 	: T extends string
 	? FromType[T]

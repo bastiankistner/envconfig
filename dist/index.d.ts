@@ -14,13 +14,13 @@ declare type FromType = {
     [key: string]: any;
 };
 export declare type Sanitizer = (value: any) => any;
-interface IDetailedSpecification {
+declare type IDetailedSpecification = {
     type?: Type;
     name?: string;
     isOptional?: boolean;
     default?: any;
     sanitize?: Sanitizer;
-}
+};
 export interface Specification {
     [key: string]: IDetailedSpecification | Type | null;
 }
@@ -30,17 +30,22 @@ export declare type Config = {
 declare type ExtractConfigType<T> = T extends {
     isOptional: true;
     sanitize: (...args: any[]) => infer U;
+    [key: string]: any;
 } ? U | undefined : T extends {
-    isOptional: false | undefined;
+    isOptional?: false | undefined;
     sanitize: (...args: any[]) => infer U;
+    [key: string]: any;
 } ? U : T extends {
     isOptional: true | undefined;
     type: Type;
+    [key: string]: any;
 } ? FromType[T['type']] | undefined : T extends {
-    isOptional: false | undefined;
+    isOptional?: false | undefined;
     type: Type;
+    [key: string]: any;
 } ? FromType[T['type']] : T extends {
     isOptional: true;
+    [key: string]: any;
 } ? string | undefined : T extends string ? FromType[T] : string;
 export declare const describe: <T extends Specification>(specification: T, input?: {
     [key: string]: any;
