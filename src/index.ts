@@ -45,13 +45,17 @@ type ExtractConfigType<T> = T extends { isOptional: true; sanitize: (...args: an
 	? U | undefined
 	: T extends { isOptional: false | undefined; sanitize: (...args: any[]) => infer U }
 	? U
+	: T extends { isOptional: true | undefined; type: Type }
+	? FromType[T['type']] | undefined
+	: T extends { isOptional: false | undefined; type: Type }
+	? FromType[T['type']]
 	: T extends { isOptional: true }
 	? string | undefined
 	: T extends string
 	? FromType[T]
 	: string;
 
-export const describe = <T extends Specification, K extends keyof T>(
+export const describe = <T extends Specification>(
 	specification: T,
 	input: { [key: string]: any } | null = process.env,
 	defaults?: { [key: string]: any }
