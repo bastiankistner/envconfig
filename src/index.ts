@@ -20,7 +20,7 @@ type FromType = {
 
 export type Sanitizer = (value: any) => any;
 
-type IDetailedSpecification = {
+export type IDetailedSpecification = {
 	type?: Type;
 	name?: string;
 	isOptional?: boolean;

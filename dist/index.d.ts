@@ -14,7 +14,7 @@ declare type FromType = {
     [key: string]: any;
 };
 export declare type Sanitizer = (value: any) => any;
-declare type IDetailedSpecification = {
+export declare type IDetailedSpecification = {
     type?: Type;
     name?: string;
     isOptional?: boolean;
