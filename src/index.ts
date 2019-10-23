@@ -41,21 +41,23 @@ export type Config = {
 	[key: string]: any;
 };
 
-type ExtractConfigType<T> = T extends {
-	isOptional: true;
-	sanitize: (...args: any[]) => infer U;
-	[key: string]: any;
-}
+type IsOptional = { isOptional: true };
+type IsRequired = { isOptional?: false | undefined };
+type AnyKey = { [key: string]: any };
+
+type ExtractConfigType<T> = T extends IsOptional &
+	AnyKey & {
+		sanitize: (...args: any[]) => infer U;
+	}
 	? U | undefined
-	: T extends {
-			isOptional?: false | undefined;
-			sanitize: (...args: any[]) => infer U;
-			[key: string]: any;
-	  }
+	: T extends IsRequired &
+			AnyKey & {
+				sanitize: (...args: any[]) => infer U;
+			}
 	? U
-	: T extends { isOptional: true | undefined; type: Type; [key: string]: any }
+	: T extends IsOptional & AnyKey & { type: Type }
 	? FromType[T['type']] | undefined
-	: T extends { isOptional?: false | undefined; type: Type; [key: string]: any }
+	: T extends IsRequired & AnyKey & { type: Type }
 	? FromType[T['type']]
 	: T extends { isOptional: true; [key: string]: any }
 	? string | undefined

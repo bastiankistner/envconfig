@@ -27,22 +27,23 @@ export interface Specification {
 export declare type Config = {
     [key: string]: any;
 };
-declare type ExtractConfigType<T> = T extends {
+declare type IsOptional = {
     isOptional: true;
-    sanitize: (...args: any[]) => infer U;
-    [key: string]: any;
-} ? U | undefined : T extends {
+};
+declare type IsRequired = {
     isOptional?: false | undefined;
+};
+declare type AnyKey = {
+    [key: string]: any;
+};
+declare type ExtractConfigType<T> = T extends IsOptional & AnyKey & {
     sanitize: (...args: any[]) => infer U;
-    [key: string]: any;
-} ? U : T extends {
-    isOptional: true | undefined;
+} ? U | undefined : T extends IsRequired & AnyKey & {
+    sanitize: (...args: any[]) => infer U;
+} ? U : T extends IsOptional & AnyKey & {
     type: Type;
-    [key: string]: any;
-} ? FromType[T['type']] | undefined : T extends {
-    isOptional?: false | undefined;
+} ? FromType[T['type']] | undefined : T extends IsRequired & AnyKey & {
     type: Type;
-    [key: string]: any;
 } ? FromType[T['type']] : T extends {
     isOptional: true;
     [key: string]: any;
