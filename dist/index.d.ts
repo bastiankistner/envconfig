@@ -45,7 +45,6 @@ declare type ExtractConfigType<T> = T extends IsOptional & AnyKey & {
 } ? FromType[T['type']] | undefined : T extends IsRequired & AnyKey & {
     type: Type;
 } ? FromType[T['type']] : T extends {
-    isOptional: true;
     default: infer V;
     [key: string]: any;
 } ? V : T extends {
