@@ -60,7 +60,7 @@ export declare const describe: <T extends Specification>(specification: T, input
     [key: string]: any;
 } | undefined) => Description<T>;
 export declare function create<T extends Specification>(specification: T): {
-    specification: T;
+    config: Description<T>;
     initialize: (root?: any) => Description<T>;
 };
 export {};

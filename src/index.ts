@@ -167,6 +167,9 @@ export const describe = <T extends Specification>(
 
 export function create<T extends Specification>(
 	specification: T
-): { specification: T; initialize: (root?: any) => Description<T> } {
-	return { specification, initialize: (root: any) => describe(specification, root) };
+): { config: Description<T>; initialize: (root?: any) => Description<T> } {
+	return {
+		config: describe(specification, null),
+		initialize: (root: any) => describe(specification, root),
+	};
 }

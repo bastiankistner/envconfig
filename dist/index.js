@@ -100,7 +100,10 @@ exports.describe = function (specification, input, defaults) {
     return config;
 };
 function create(specification) {
-    return { specification: specification, initialize: function (root) { return exports.describe(specification, root); } };
+    return {
+        config: exports.describe(specification, null),
+        initialize: function (root) { return exports.describe(specification, root); },
+    };
 }
 exports.create = create;
 //# sourceMappingURL=index.js.map
