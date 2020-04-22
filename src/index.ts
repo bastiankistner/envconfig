@@ -84,7 +84,7 @@ export const describe = <T extends Specification>(
 	}
 
 	if (input === null) {
-		return {} as { [Key in keyof T]: ExtractConfigType<T[Key]> };
+		return {} as Description<T>;
 	}
 
 	const missingKeys: string[] = [];
