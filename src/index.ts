@@ -67,7 +67,7 @@ type ExtractConfigType<T> = T extends IsOptional &
 	? FromType[T]
 	: string;
 
-export type Description<T extends Specification> = { [Key in keyof T]: T[Key] extends null ? null : ExtractConfigType<T[Key]> };
+export type Description<T extends Specification> = { [Key in keyof T]: T[Key] extends null ? string : ExtractConfigType<T[Key]> };
 
 export const describe = <T extends Specification>(
 	specification: T,
