@@ -35,12 +35,14 @@ exports.describe = function (specification, input, defaults) {
         handleError('The first argument must be an object');
     }
     if (typeof input !== 'object') {
-        handleError('The second argument must be an object');
+        // handleError('The second argument must be an object');
+        // we will just return the spec and not throw anything
     }
     if (input === null) {
         return {};
     }
-    return Object.keys(specification).reduce(function (acc, key) {
+    var missingKeys = [];
+    var config = Object.keys(specification).reduce(function (acc, key) {
         var itemSpecification = specification[key];
         if (itemSpecification === null) {
             itemSpecification = {};
@@ -61,33 +63,44 @@ exports.describe = function (specification, input, defaults) {
         if (itemSpecification.sanitize && typeof itemSpecification.sanitize !== 'function') {
             handleError("Invalid specification: test.sanitize must be a function");
         }
-        if (typeof itemSpecification.sanitize === 'function') {
-            value = itemSpecification.sanitize(value);
+        // now parse the value
+        var isStandardDefined = typeof rest.default !== 'undefined';
+        var wasInitiallyDefined = typeof value !== 'undefined';
+        if (!wasInitiallyDefined && !rest.isOptional && !isStandardDefined) {
+            missingKeys.push(itemSpecification.name || key);
         }
         else {
-            if (!sanitizers[type]) {
-                handleError("Invalid specification: " + key + ".type is invalid (valid types are: " + Object.keys(sanitizers).join(', '));
+            if (typeof itemSpecification.sanitize === 'function') {
+                value = itemSpecification.sanitize(value);
             }
-            var isStandardDefined = typeof rest.default !== 'undefined';
-            var wasInitiallyDefined = typeof value !== 'undefined';
-            if (!rest.isOptional && !wasInitiallyDefined && !isStandardDefined) {
-                handleError("Required: " + key);
+            else {
+                if (!sanitizers[type]) {
+                    handleError("Invalid specification: " + key + ".type is invalid (valid types are: " + Object.keys(sanitizers).join(', '));
+                }
+                if (wasInitiallyDefined) {
+                    value = sanitizers[type](value);
+                }
+                if (typeof value === 'undefined' && isStandardDefined) {
+                    value = value || rest.default;
+                }
             }
-            if (wasInitiallyDefined) {
-                value = sanitizers[type](value);
+            if (typeof value === 'undefined' && !rest.isOptional) {
+                missingKeys.push(itemSpecification.name || key);
             }
-            if (typeof value === 'undefined' && isStandardDefined) {
-                value = value || rest.default;
+            if (typeof value !== 'undefined') {
+                // @ts-ignore
+                acc[key] = value;
             }
-        }
-        if (typeof value === 'undefined' && !rest.isOptional) {
-            handleError("Required: " + key + " as " + (itemSpecification.name || key));
-        }
-        if (typeof value !== 'undefined') {
-            // @ts-ignore
-            acc[key] = value;
         }
         return acc;
     }, {});
+    if (missingKeys.length > 0) {
+        throw new Error("Values for keys [" + missingKeys.join(', ') + "] could not be found.");
+    }
+    return config;
 };
+function create(specification) {
+    return { specification: specification, initialize: function (root) { return exports.describe(specification, root); } };
+}
+exports.create = create;
 //# sourceMappingURL=index.js.map

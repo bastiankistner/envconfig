@@ -67,7 +67,7 @@ type ExtractConfigType<T> = T extends IsOptional &
 	? FromType[T]
 	: string;
 
-export type Description<T> = { [Key in keyof T]: ExtractConfigType<T[Key]> };
+export type Description<T extends Specification> = { [Key in keyof T]: ExtractConfigType<T[Key]> };
 
 export const describe = <T extends Specification>(
 	specification: T,
@@ -79,14 +79,17 @@ export const describe = <T extends Specification>(
 	}
 
 	if (typeof input !== 'object') {
-		handleError('The second argument must be an object');
+		// handleError('The second argument must be an object');
+		// we will just return the spec and not throw anything
 	}
 
 	if (input === null) {
 		return {} as { [Key in keyof T]: ExtractConfigType<T[Key]> };
 	}
 
-	return Object.keys(specification).reduce((acc, key) => {
+	const missingKeys: string[] = [];
+
+	const config = Object.keys(specification).reduce((acc, key) => {
 		let itemSpecification = specification[key];
 
 		if (itemSpecification === null) {
@@ -114,42 +117,56 @@ export const describe = <T extends Specification>(
 			handleError(`Invalid specification: test.sanitize must be a function`);
 		}
 
-		if (typeof itemSpecification.sanitize === 'function') {
-			value = itemSpecification.sanitize(value);
+		// now parse the value
+
+		const isStandardDefined = typeof rest.default !== 'undefined';
+		const wasInitiallyDefined = typeof value !== 'undefined';
+
+		if (!wasInitiallyDefined && !rest.isOptional && !isStandardDefined) {
+			missingKeys.push(itemSpecification.name || key);
 		} else {
-			if (!sanitizers[type as Type]) {
-				handleError(
-					`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(
-						sanitizers
-					).join(', ')}`
-				);
+			if (typeof itemSpecification.sanitize === 'function') {
+				value = itemSpecification.sanitize(value);
+			} else {
+				if (!sanitizers[type as Type]) {
+					handleError(
+						`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(
+							sanitizers
+						).join(', ')}`
+					);
+				}
+
+				if (wasInitiallyDefined) {
+					value = sanitizers[type as Type](value);
+				}
+
+				if (typeof value === 'undefined' && isStandardDefined) {
+					value = value || rest.default;
+				}
 			}
 
-			const isStandardDefined = typeof rest.default !== 'undefined';
-			const wasInitiallyDefined = typeof value !== 'undefined';
-
-			if (!rest.isOptional && !wasInitiallyDefined && !isStandardDefined) {
-				handleError(`Required: ${key}`);
+			if (typeof value === 'undefined' && !rest.isOptional) {
+				missingKeys.push(itemSpecification.name || key);
 			}
 
-			if (wasInitiallyDefined) {
-				value = sanitizers[type as Type](value);
+			if (typeof value !== 'undefined') {
+				// @ts-ignore
+				acc[key] = value;
 			}
-
-			if (typeof value === 'undefined' && isStandardDefined) {
-				value = value || rest.default;
-			}
-		}
-
-		if (typeof value === 'undefined' && !rest.isOptional) {
-			handleError(`Required: ${key} as ${itemSpecification.name || key}`);
-		}
-
-		if (typeof value !== 'undefined') {
-			// @ts-ignore
-			acc[key] = value;
 		}
 
 		return acc;
 	}, {}) as { [Key in keyof T]: ExtractConfigType<T[Key]> };
+
+	if (missingKeys.length > 0) {
+		throw new Error(`Values for keys [${missingKeys.join(', ')}] could not be found.`);
+	}
+
+	return config;
 };
+
+export function create<T extends Specification>(
+	specification: T
+): { specification: T; initialize: (root?: any) => Description<T> } {
+	return { specification, initialize: (root: any) => describe(specification, root) };
+}
