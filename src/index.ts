@@ -67,11 +67,13 @@ type ExtractConfigType<T> = T extends IsOptional &
 	? FromType[T]
 	: string;
 
+export type Description<T> = { [Key in keyof T]: ExtractConfigType<T[Key]> };
+
 export const describe = <T extends Specification>(
 	specification: T,
 	input: { [key: string]: any } | null = process.env,
 	defaults?: { [key: string]: any }
-): { [Key in keyof T]: ExtractConfigType<T[Key]> } => {
+): Description<T> => {
 	if (typeof specification !== 'object') {
 		handleError('The first argument must be an object');
 	}

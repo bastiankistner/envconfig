@@ -51,9 +51,12 @@ declare type ExtractConfigType<T> = T extends IsOptional & AnyKey & {
     isOptional: true;
     [key: string]: any;
 } ? string | undefined : T extends string ? FromType[T] : string;
+export declare type Description<T> = {
+    [Key in keyof T]: ExtractConfigType<T[Key]>;
+};
 export declare const describe: <T extends Specification>(specification: T, input?: {
     [key: string]: any;
 } | null, defaults?: {
     [key: string]: any;
-} | undefined) => { [Key in keyof T]: ExtractConfigType<T[Key]>; };
+} | undefined) => Description<T>;
 export {};
