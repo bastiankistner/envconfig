@@ -156,7 +156,7 @@ export const describe = <T extends Specification>(
 		}
 
 		return acc;
-	}, {}) as { [Key in keyof T]: ExtractConfigType<T[Key]> };
+	}, {}) as Description<T>;
 
 	if (missingKeys.length > 0) {
 		throw new Error(`Values for keys [${missingKeys.join(', ')}] could not be found.`);
