@@ -108,4 +108,9 @@ function create(specification) {
     };
 }
 exports.create = create;
+var _a = create({
+    AAA: { type: Type.BOOLEAN },
+    BBB: null,
+    CCC: { type: Type.STRING },
+}), config = _a.config, initialize = _a.initialize;
 //# sourceMappingURL=index.js.map

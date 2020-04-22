@@ -65,6 +65,8 @@ type ExtractConfigType<T> = T extends IsOptional &
 	? string | undefined
 	: T extends string
 	? FromType[T]
+	: T extends null
+	? string
 	: string;
 
 export type Description<T extends Specification> = { [Key in keyof T]: ExtractConfigType<T[Key]> };
@@ -129,11 +131,7 @@ export const describe = <T extends Specification>(
 				value = itemSpecification.sanitize(value);
 			} else {
 				if (!sanitizers[type as Type]) {
-					handleError(
-						`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(
-							sanitizers
-						).join(', ')}`
-					);
+					handleError(`Invalid specification: ${key}.type is invalid (valid types are: ${Object.keys(sanitizers).join(', ')}`);
 				}
 
 				if (wasInitiallyDefined) {
@@ -165,11 +163,15 @@ export const describe = <T extends Specification>(
 	return config;
 };
 
-export function create<T extends Specification>(
-	specification: T
-): { config: Description<T>; initialize: (root?: any) => Description<T> } {
+export function create<T extends Specification>(specification: T): { config: Description<T>; initialize: (root?: any) => Description<T> } {
 	return {
 		config: describe(specification, null),
 		initialize: (root: any) => describe(specification, root),
 	};
 }
+
+let { config, initialize } = create({
+	AAA: { type: Type.BOOLEAN },
+	BBB: null,
+	CCC: { type: Type.STRING },
+});

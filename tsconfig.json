@@ -8,9 +8,7 @@
 		"sourceMap": true,
 		"outDir": "dist",
 		"baseUrl": "./src",
-		"paths": {
-			"*": ["node_modules/*", "src/types/*"]
-		},
+		"typeRoots": ["node_modules/@types", "src/types"],
 		"strictNullChecks": true,
 		"lib": ["es6"],
 		"declaration": true,
