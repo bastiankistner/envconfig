@@ -1,5 +1,4 @@
 import * as sanitizers from './sanitizers';
-import { PickByValue } from 'utility-types';
 
 export enum Type {
 	NUMBER = 'number',
@@ -161,15 +160,12 @@ export const describe = <T extends Specification>(
 	return config;
 };
 
-export function create<T extends Specification>(specification: T): { config: Description<T>; initialize: (root?: any) => Description<T> } {
+export function create<T extends Specification>(
+	specification: T,
+	configRoot = null
+): { current: Description<T>; init: (root?: any) => Description<T> } {
 	return {
-		config: describe(specification, null),
-		initialize: (root: any) => describe(specification, root),
+		current: describe(specification, null),
+		init: (root = configRoot) => describe(specification, root),
 	};
 }
-
-let { config, initialize } = create({
-	AAA: { type: Type.BOOLEAN },
-	BBB: null,
-	CCC: { type: Type.STRING },
-});

@@ -101,16 +101,15 @@ exports.describe = function (specification, input, defaults) {
     }
     return config;
 };
-function create(specification) {
+function create(specification, configRoot) {
+    if (configRoot === void 0) { configRoot = null; }
     return {
-        config: exports.describe(specification, null),
-        initialize: function (root) { return exports.describe(specification, root); },
+        current: exports.describe(specification, null),
+        init: function (root) {
+            if (root === void 0) { root = configRoot; }
+            return exports.describe(specification, root);
+        },
     };
 }
 exports.create = create;
-var _a = create({
-    AAA: { type: Type.BOOLEAN },
-    BBB: null,
-    CCC: { type: Type.STRING },
-}), config = _a.config, initialize = _a.initialize;
 //# sourceMappingURL=index.js.map

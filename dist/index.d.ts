@@ -59,8 +59,8 @@ export declare const describe: <T extends Specification>(specification: T, input
 } | null, defaults?: {
     [key: string]: any;
 } | undefined) => Description<T>;
-export declare function create<T extends Specification>(specification: T): {
-    config: Description<T>;
-    initialize: (root?: any) => Description<T>;
+export declare function create<T extends Specification>(specification: T, configRoot?: null): {
+    current: Description<T>;
+    init: (root?: any) => Description<T>;
 };
 export {};
