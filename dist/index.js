@@ -103,11 +103,13 @@ exports.describe = function (specification, input, defaults) {
 };
 function create(specification, configRoot) {
     if (configRoot === void 0) { configRoot = null; }
+    var current = exports.describe(specification, null);
     return {
-        current: exports.describe(specification, null),
+        current: current,
         init: function (root) {
             if (root === void 0) { root = configRoot; }
-            return exports.describe(specification, root);
+            current = exports.describe(specification, root);
+            return current;
         },
     };
 }

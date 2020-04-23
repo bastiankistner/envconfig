@@ -164,8 +164,12 @@ export function create<T extends Specification>(
 	specification: T,
 	configRoot = null
 ): { current: Description<T>; init: (root?: any) => Description<T> } {
+	let current: Description<T> = describe(specification, null);
 	return {
-		current: describe(specification, null),
-		init: (root = configRoot) => describe(specification, root),
+		current,
+		init: (root = configRoot) => {
+			current = describe(specification, root);
+			return current;
+		},
 	};
 }
