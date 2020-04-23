@@ -164,10 +164,10 @@ export function create<T extends Specification>(
 	specification: T,
 	configRoot = null
 ): { current: Description<T>; init: (root?: any) => Description<T> } {
-	let current: Description<T> = describe(specification, null);
+	let current: Description<T> = describe(specification, configRoot);
 	return {
 		current,
-		init: (root = configRoot) => {
+		init: (root = configRoot || process.env) => {
 			current = describe(specification, root);
 			return current;
 		},

@@ -103,11 +103,11 @@ exports.describe = function (specification, input, defaults) {
 };
 function create(specification, configRoot) {
     if (configRoot === void 0) { configRoot = null; }
-    var current = exports.describe(specification, null);
+    var current = exports.describe(specification, configRoot);
     return {
         current: current,
         init: function (root) {
-            if (root === void 0) { root = configRoot; }
+            if (root === void 0) { root = configRoot || process.env; }
             current = exports.describe(specification, root);
             return current;
         },
