@@ -9,6 +9,7 @@
 		"build:clean": "rimraf dist/**",
 		"build:transpile": "NODE_ENV=production tsc",
 		"build": "npm-run-all build:clean build:transpile",
+		"dev": "tsc --watch",
 		"test": "npm-run-all test:jest test:lint",
 		"test:jest": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --coverage",
 		"test:jest:watch": "JEST_JUNIT_OUTPUT=coverage/junit.xml jest --watch",

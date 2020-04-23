@@ -164,11 +164,20 @@ export function create<T extends Specification>(
 	specification: T,
 	configRoot = null
 ): { current: Description<T>; init: (root?: any) => Description<T> } {
-	let current: Description<T> = describe(specification, configRoot);
+	const current: Description<T> = describe(specification, configRoot);
 	return {
 		current,
 		init: (root = configRoot || process.env) => {
-			current = describe(specification, root);
+			const next = describe(specification, root);
+
+			for (let key in current) {
+				delete current[key];
+			}
+
+			for (let key in next) {
+				current[key] = next[key];
+			}
+
 			return current;
 		},
 	};

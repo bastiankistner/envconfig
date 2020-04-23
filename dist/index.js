@@ -108,7 +108,13 @@ function create(specification, configRoot) {
         current: current,
         init: function (root) {
             if (root === void 0) { root = configRoot || process.env; }
-            current = exports.describe(specification, root);
+            var next = exports.describe(specification, root);
+            for (var key in current) {
+                delete current[key];
+            }
+            for (var key in next) {
+                current[key] = next[key];
+            }
             return current;
         },
     };
