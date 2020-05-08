@@ -9,75 +9,76 @@
 
 ## Usage
 
-### Standard
+### Default Example
 
 ```typescript
-import { describe, Type } from '@mrboolean/envconfig';
+import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
+import { parse } from 'dotenv';
+import { create, Types } from 'envconfig';
 
-interface Config {
-  isDebug: boolean;
-  port: number;
-}
+const secretManagerServiceClient = new SecretManagerServiceClient();
 
-const config = <Config>describe({
-  isDebug: {
-    name: 'DEBUG',
-    type: Type.BOOLEAN,
-    isRequired: true,
-    standard: false,
+import { STACKDRIVER_LOG_LEVEL_WINSTON } from './lib/constants';
+
+const envconfig = create({
+  // simple (just use process.env.MY_STRING_VAR and throw if it's unset)
+  MY_STRING_VAR: null,
+  // set a type other than string and use default value
+  MY_BOOLEAN_VAR: {
+    type: Types.BOOLEAN,
+    default: true,
   },
-  port: {
-    name: 'BIND_PORT',
-    type: Type.NUMBER,
-    standard: 8080,
+  // sanitize, which infers a boolean type, and mark optional
+  MY_SANITIZED_VAR: {
+    isOptional: true,
+    sanitize: v => v === 'true',
   },
 });
 
-console.log(config);
-```
+// ---------------------------------------
+// SIMPLE EXPORT APPROACH
+envconfig.current = envconfig.init();
+export default envconfig.current;
 
-Results:
 
-```json
-{
-  "isDebug": false,
-  "port": 8080
-}
-```
+// ---------------------------------------
+// MORE ADVANCED EXPORT APPROACH IN CASE YOU WANT TO ASYNCHRONOUSLY LOAD CONFIG FROM A URL
 
-### Custom sanitizer
-
-```typescript
-import { describe } from '@mrboolean/envconfig';
-
-interface Config {
-  custom: boolean;
+export function getConfig(): typeof envconfig['current'] {
+  if (Object.keys(envconfig.current).length === 0) throw new Error('initConfig has not yet been called');
+  return envconfig.current;
 }
 
-const config = <Config>describe({
-  custom: {
-    name: 'CUSTOM',
-    sanitize: (value: any): boolean => (value === 1 ? false : true),
-  },
-});
-```
+export async function initConfig(SECRET_MANAGER_SECRET_NAME = process.env.SECRET_MANAGER_SECRET_NAME) {
+  let CONFIG_ROOT = process.env;
+
+  if (process.env.NODE_ENV === 'production') {
+    if (SECRET_MANAGER_SECRET_NAME === 'undefined') {
+      throw new Error('SECRET_MANAGER_SECRET_NAME environment variable is not set and was not provided');
+    }
+
+    const [accessResponse] = await secretManagerServiceClient.accessSecretVersion({
+      name: process.env.SECRET_MANAGER_SECRET_NAME,
+    });
+
+    const secretContent = accessResponse?.payload?.data?.toString();
+
+    if (typeof secretContent !== 'string') {
+      throw new Error('Could not access secret from Google Secret Manager');
+    }
+
+    CONFIG_ROOT = parse(secretContent);
+  }
+
+  envconfig.current = envconfig.init(CONFIG_ROOT);
+
+  return envconfig.current;
+}
 
 ## Supported Types
 
-`@mrboolean/envconfig` supports these field types:
-
+- string (DEFAULT)
 - number
-- string
 - array
 - boolean
-- json
-
-## License
-
-Copyright 2018 Marc Binder <mailto:marcandrebinder@gmail.com>
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+- object
