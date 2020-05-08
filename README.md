@@ -12,7 +12,6 @@ based on mrboolean/envconfig
 ### Default Example
 
 ```typescript
-import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { parse } from 'dotenv';
 import { create, Types } from 'envconfig';
 
