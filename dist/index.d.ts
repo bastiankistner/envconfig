@@ -38,18 +38,16 @@ declare type AnyKey = {
 };
 declare type ExtractConfigType<T> = T extends IsOptional & AnyKey & {
     sanitize: (...args: any[]) => infer U;
-} ? U | undefined : T extends IsRequired & AnyKey & {
+} ? U : T extends IsRequired & AnyKey & {
     sanitize: (...args: any[]) => infer U;
 } ? U : T extends IsOptional & AnyKey & {
     type: Type;
 } ? FromType[T['type']] | undefined : T extends IsRequired & AnyKey & {
     type: Type;
-} ? FromType[T['type']] : T extends {
+} ? FromType[T['type']] : T extends AnyKey & {
     default: infer V;
-    [key: string]: any;
-} ? V : T extends {
+} ? V : T extends AnyKey & {
     isOptional: true;
-    [key: string]: any;
 } ? string | undefined : T extends string ? FromType[T] : string;
 export declare type Description<T extends Specification> = {
     [Key in keyof T]: T[Key] extends null ? string : ExtractConfigType<T[Key]>;

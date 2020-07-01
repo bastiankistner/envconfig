@@ -48,7 +48,7 @@ type ExtractConfigType<T> = T extends IsOptional &
 	AnyKey & {
 		sanitize: (...args: any[]) => infer U;
 	}
-	? U | undefined
+	? U
 	: T extends IsRequired &
 			AnyKey & {
 				sanitize: (...args: any[]) => infer U;
@@ -58,9 +58,9 @@ type ExtractConfigType<T> = T extends IsOptional &
 	? FromType[T['type']] | undefined
 	: T extends IsRequired & AnyKey & { type: Type }
 	? FromType[T['type']]
-	: T extends { default: infer V; [key: string]: any }
+	: T extends AnyKey & { default: infer V }
 	? V
-	: T extends { isOptional: true; [key: string]: any }
+	: T extends AnyKey & { isOptional: true }
 	? string | undefined
 	: T extends string
 	? FromType[T]
