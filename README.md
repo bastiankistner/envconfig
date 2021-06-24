@@ -1,3 +1,9 @@
+----
+
+<p align=center>⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️<br/><strong>NO LONGER MAINTAINED</strong><br/>use <a href="https://www.npmjs.com/package/envalid">envalid</a> instead<br/>⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️ ⚠️</p>
+
+----
+
 # envconfig
 
 based on mrboolean/envconfig
